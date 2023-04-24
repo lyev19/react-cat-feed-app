@@ -3,21 +3,70 @@ import { Button,StyleSheet, Text, View } from 'react-native'
 import { useState,useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import  AsyncStorage  from '@react-native-async-storage/async-storage'; 
+
+
+// async function lol (){
+//   // await AsyncStorage.setItem('token', 'my-token-value');
+
+//   // const ob = {"times":[6,12,18,22]}
+//   //  await AsyncStorage.setItem("times",JSON.stringify(ob))
+//  // await AsyncStorage.setItem("fed",JSON.stringify({"fed":"false"}))
+//   const fed = await AsyncStorage.getItem("fed")
+//   const times = await AsyncStorage.getItem("times")
+
+//   console.log( fed + times )
+// }
+
+// lol()
+
 
 export default function App() {
+
+  
   const [last,setLast] = useState("Leon")
-  const [fed,setFed]= useState(true)
+  const [fed,setFed]= useState()
   const datad = new Date()
   const [timer,setTimer] = useState(datad.getHours())
   const[minutes,setMinutes]=useState(datad.getMinutes())
   const[seconds,setSeconds]=useState(datad.getSeconds())
   const [times,setTimes]=useState(60000)
-  const [feeding,setfeeding]= useState([6,12,18,22])
+  const [feeding,setfeeding]= useState([0])
   const [petName,setPet] = useState("Mostaza")
   const userList=["Leon","Lore"]
+
+  useEffect( () => {
+    async function a (){
+      const fedVal = await  AsyncStorage.getItem("fed")
+      const f = await JSON.parse(fedVal)
+      setFed(f.fed)
+      const timesVal = await AsyncStorage.getItem("times")
+      const timesv = await JSON.parse(timesVal)
+      setfeeding(timesv.times)
+      console.log(f)
+
+    }
+     
+    a()
+    
+    
+  }, []);
+
+ async function seter (t){
+  if (t){
+    await AsyncStorage.setItem("fed",JSON.stringify({"fed":"true"}))
+  }
+  else{
+    await AsyncStorage.setItem("fed",JSON.stringify({"fed":"false"}))
+  }
+   
+ }
+
+
   const clickHandler=()=>{
      
     setFed(true)
+    seter(true)
     
   }
   
@@ -25,6 +74,7 @@ export default function App() {
      for(let i=0;i<list.lenght;i++){
        if(timer===list[i]){
          setFed(false)
+         seter(false)
        }
      }
   }
@@ -73,10 +123,7 @@ export default function App() {
 
     }, 1000);
     
-    if(checkTime(feeding)){
-      setFed(false);
-    }
-
+   checkTime(feeding)
   }, [timer]);
 
 
