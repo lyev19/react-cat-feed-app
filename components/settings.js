@@ -1,13 +1,14 @@
 import { View,TextInput} from "react-native"
-
-export const Settings = ()=>{
+import { Button} from 'react-native'
+export const SettingsA = ({navigation})=>{
    
 
 
    return(
        <View>
-          <View>set times 
-            <TextInput></TextInput>   
+          <View>
+             <Button title="back to home " onPress= {()=>{navigation.navigate("Home")}} />
+           
           </View>
        </View>
    )

@@ -4,8 +4,9 @@ import { useState,useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import  AsyncStorage  from '@react-native-async-storage/async-storage'; 
-
-
+import { createNativeWrapper } from 'react-native-gesture-handler'
+import 'react-native-gesture-handler';
+import { SettingsA } from './components/settings'
 // async function lol (){
 //   // await AsyncStorage.setItem('token', 'my-token-value');
 
@@ -21,10 +22,25 @@ import  AsyncStorage  from '@react-native-async-storage/async-storage';
 // lol()
 
 
-export default function App() {
 
-  
-  const [last,setLast] = useState("Leon")
+
+// export const SettingsA = ({navigation})=>{
+   
+
+
+//   return(
+//       <View>
+//          <View>
+//             <Button title="back to home " onPress= {()=>{navigation.navigate("Home")}} />
+           
+//          </View>
+//       </View>
+//   )
+
+// }
+
+
+const HomeScreen = ({navigation})=>{
   const [fed,setFed]= useState()
   const datad = new Date()
   const [timer,setTimer] = useState(datad.getHours())
@@ -148,10 +164,30 @@ export default function App() {
       </View>
 
       <View style={styles.container4}>
+         <Button title="Settings" onPress= {()=>{navigation.navigate("Settings")}}></Button>
          <Text > Settings </Text>
       </View>
 
     </View>
+    
+  );
+}
+
+const Stack = createStackNavigator();
+
+
+
+export default function App() {
+
+  
+ 
+  return (
+     <NavigationContainer>
+        <Stack.Navigator>
+           <Stack.Screen name="Home" component={HomeScreen} options={{title:"Cat feed aplication"}} />
+           <Stack.Screen name="Settings" component={SettingsA} options={{title:"Settings"}}></Stack.Screen>
+        </Stack.Navigator>
+     </NavigationContainer>
     
   );
 }
