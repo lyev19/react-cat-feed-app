@@ -12,7 +12,7 @@ export const HomeScreen = ({navigation})=>{
   const [times,setTimes]=useState(60000)
   const [feeding,setfeeding]= useState([0]) //imp
   const [petName,setPet] = useState("Mostaza") //imp
-  const userList=["Leon","Lore"]
+  
 
   useEffect( () => {
     async function a (){
@@ -23,6 +23,7 @@ export const HomeScreen = ({navigation})=>{
       const timesv = await JSON.parse(timesVal)
       setfeeding(timesv.times)
       console.log(f)
+      console.log(timesv.times)
 
     }
      
@@ -50,12 +51,15 @@ export const HomeScreen = ({navigation})=>{
   }
   
   const checkTime= (list)=>{
-     for(let i=0;i<list.lenght;i++){
-       if(timer===list[i]){
-         setFed(false)
-         seter(false)
-       }
-     }
+    if(list!=undefined){
+      for(let i=0;i<list.lenght;i++){
+        if(timer===list[i].hours){
+          setFed(false)
+          seter(false)
+        }
+      }
+    }
+     
   }
 
 
@@ -125,7 +129,7 @@ export const HomeScreen = ({navigation})=>{
       <View style={styles.container3}>
       <Text style={styles.Text}>{fed?<Text>Cat is already fed</Text>:<Button onPress={()=>{clickHandler()}}title="i fed the cat!" />} </Text> 
       </View>
-
+      <View style={styles.container3}></View>
       <View style={styles.container4}>
          <Button title="Settings" onPress= {()=>{navigation.navigate("Settings")}}></Button>
          <Text > Settings </Text>

@@ -1,52 +1,28 @@
-import { StatusBar } from 'expo-status-bar'
+
 import { Button,StyleSheet, Text, View } from 'react-native'
-import { useState,useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import  AsyncStorage  from '@react-native-async-storage/async-storage'; 
-import { createNativeWrapper } from 'react-native-gesture-handler'
 import 'react-native-gesture-handler';
 import { SettingsA } from './components/settings'
-import { createContext } from 'react'
 import { HomeScreen } from './components/mai'
-// async function lol (){
-//   // await AsyncStorage.setItem('token', 'my-token-value');
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-//   // const ob = {"times":[6,12,18,22]}
-//   //  await AsyncStorage.setItem("times",JSON.stringify(ob))
-//  // await AsyncStorage.setItem("fed",JSON.stringify({"fed":"false"}))
-//   const fed = await AsyncStorage.getItem("fed")
-//   const times = await AsyncStorage.getItem("times")
+    // async function lol() {
+    //   await AsyncStorage.setItem('token', 'my-token-value');
 
-//   console.log( fed + times )
-// }
+    //   const ob = { "times": [{ "hours": 6, "minutes": 0 }, { "hours": 12, "minutes": 0 }, { "hours": 18, "minutes": 0 }, { "hours": 22, "minutes": 0 }] }
+    //   await AsyncStorage.setItem("times", JSON.stringify(ob))
+    //  await AsyncStorage.setItem("fed", JSON.stringify({ "fed": "false" }))
+    //  const fed = await AsyncStorage.getItem("fed")
+    //  const times = await AsyncStorage.getItem("times")
 
-// lol()
+    //   console.log(fed + times)
+    // }
 
-
-
-
-// export const SettingsA = ({navigation})=>{
-   
-
-
-//   return(
-//       <View>
-//          <View>
-//             <Button title="back to home " onPress= {()=>{navigation.navigate("Home")}} />
-           
-//          </View>
-//       </View>
-//   )
-
-// }
-
-//const myContext = React.createContext(defaultValue)
+    // lol()
 
 
 const Stack = createStackNavigator();
-
-
 
 export default function App() {
 
