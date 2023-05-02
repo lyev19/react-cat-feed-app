@@ -1,5 +1,5 @@
 
-import { Button,StyleSheet, Text, View } from 'react-native'
+import {StyleSheet} from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import 'react-native-gesture-handler';
@@ -7,19 +7,34 @@ import { SettingsA } from './components/settings'
 import { HomeScreen } from './components/mai'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-    // async function lol() {
-    //   await AsyncStorage.setItem('token', 'my-token-value');
+async function jumpStart() {
+  const a = await AsyncStorage.getItem("times")
 
-    //   const ob = { "times": [{ "hours": 6, "minutes": 0 }, { "hours": 12, "minutes": 0 }, { "hours": 18, "minutes": 0 }, { "hours": 22, "minutes": 0 }] }
-    //   await AsyncStorage.setItem("times", JSON.stringify(ob))
-    //  await AsyncStorage.setItem("fed", JSON.stringify({ "fed": "false" }))
-    //  const fed = await AsyncStorage.getItem("fed")
-    //  const times = await AsyncStorage.getItem("times")
+  console.log("this is it")
+  console.log(a)
+  //if asyncstorage doesnt exist
+  if (a === null) {
 
-    //   console.log(fed + times)
-    // }
+    await AsyncStorage.setItem('token', 'my-token-value');
+    const ob = { "times": [{ "hours": 6, "minutes": 0 }, { "hours": 12, "minutes": 0 }, { "hours": 18, "minutes": 0 }, { "hours": 22, "minutes": 0 }] }
+    await AsyncStorage.setItem("times", JSON.stringify(ob))
+    await AsyncStorage.setItem("fed", JSON.stringify({ "fed": "false" }))
+    const fed = await AsyncStorage.getItem("fed")
+    const times = await AsyncStorage.getItem("times")
+    console.log(fed + times)
+  }
+  else if (a.times === []) {
+    await AsyncStorage.setItem('token', 'my-token-value');
+    const ob = { "times": [{ "hours": 6, "minutes": 0 }, { "hours": 12, "minutes": 0 }, { "hours": 18, "minutes": 0 }, { "hours": 22, "minutes": 0 }] }
+    await AsyncStorage.setItem("times", JSON.stringify(ob))
+    await AsyncStorage.setItem("fed", JSON.stringify({ "fed": "false" }))
+    const fed = await AsyncStorage.getItem("fed")
+    const times = await AsyncStorage.getItem("times")
+  }
+}
 
-    // lol()
+
+jumpStart()
 
 
 const Stack = createStackNavigator();

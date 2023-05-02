@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar'
-import { Button,StyleSheet, Text, View } from 'react-native'
+import { Button,StyleSheet, Text, View, TouchableHighlight } from 'react-native'
 import { useState,useEffect } from 'react'
 import  AsyncStorage  from '@react-native-async-storage/async-storage'; 
 
@@ -82,7 +82,9 @@ export const HomeScreen = ({navigation})=>{
     }
   }
 
- 
+  const foodTime1 = ()=>{
+
+  }
 
   useEffect(() => {
     console.log("time")
@@ -129,11 +131,14 @@ export const HomeScreen = ({navigation})=>{
       <View style={styles.container3}>
       <Text style={styles.Text}>{fed?<Text>Cat is already fed</Text>:<Button onPress={()=>{clickHandler()}}title="i fed the cat!" />} </Text> 
       </View>
-      <View style={styles.container3}></View>
-      <View style={styles.container4}>
-         <Button title="Settings" onPress= {()=>{navigation.navigate("Settings")}}></Button>
+      <View style={styles.container3}>
+        <Text>Current schedule</Text>
+        <Text>{feeding.map(a=><Text> {a.hours>=10?"":"0"}{a.hours}:{a.minutes>=10?"":"0"}{a.minutes} </Text>)}</Text></View>
+      <TouchableHighlight 
+      underlayColor="skyblue"
+      style={styles.container4} onPress= {()=>{navigation.navigate("Settings")}}>
          <Text > Settings </Text>
-      </View>
+      </TouchableHighlight>
 
     </View>
     
