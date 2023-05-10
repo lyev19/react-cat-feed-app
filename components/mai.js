@@ -12,29 +12,47 @@ export const HomeScreen = ({navigation})=>{
   const [times,setTimes]=useState(60000)
   const [feeding,setfeeding]= useState([0]) //imp
   const [petName,setPet] = useState("Mostaza") //imp
-  
-
+  const [lastFed,setLastFed] = useState()
+  const [next,setNext]= useState(0)
+ // lista de horarios | el ultimo horario de alimentacion | la hora actual| la siguiente alimentacion => si la 
+ // hora actual es mayor que la siguiente alimentacion el gato no esta alimentado 
   useEffect( () => {
-    async function a (){
+    async function Load (){
       const fedVal = await  AsyncStorage.getItem("fed")
       const f = await JSON.parse(fedVal)
-      setFed(f.fed)
+      const l = await AsyncStorage.getItem("last")
+      const last = await JSON.parse(l)  
       const timesVal = await AsyncStorage.getItem("times")
       const timesv = await JSON.parse(timesVal)
-      setfeeding(timesv.times)
-      console.log(f)
-      console.log(timesv.times)
-
+       setfeeding(timesv.times)
+      setLastFed([last])
+      setFed(f.fed)
+      console.log( "this is last" + last.hours)
+      const nextPos= getIndex(feeding,last)
+      console.log(nextPos)
+      setNext(feeding[nextPos +1])
     }
      
-    a()
-    
-    
+    Load()
+  
   }, []);
-
+ function getIndex (arr,comp){
+    
+    for(let i=0;i<arr.length;i++){
+      if(arr[i].hours == comp.hours && i<arr.length-1){
+        return i 
+      }
+      else if ( arr[i].hours == comp.hours && i == arr.length-1){
+        return -1
+      }
+    }
+    return 0
+ }
  async function seter (t){
   if (t){
     await AsyncStorage.setItem("fed",JSON.stringify({"fed":"true"}))
+
+    await AsyncStorage.setItem("last",JSON.stringify(lastFed)) 
   }
   else{
     await AsyncStorage.setItem("fed",JSON.stringify({"fed":"false"}))
@@ -44,20 +62,25 @@ export const HomeScreen = ({navigation})=>{
 
 
   const clickHandler=()=>{
-     
+    
+    setNext( feeding[ getIndex(feeding,lastFed)+1])
     setFed(true)
     seter(true)
     
   }
   
   const checkTime= (list)=>{
-    if(list!=undefined){
-      for(let i=0;i<list.lenght;i++){
-        if(timer===list[i].hours){
-          setFed(false)
-          seter(false)
+    console.log(next)
+    if(list!=undefined && next!=0 && next!=undefined){
+         if(timer >= next.hours && minutes >=next.minutes){
+           
+           setFed(false)
+           seter(false)
+           setLastFed(next)
+           
         }
-      }
+       
+   
     }
      
   }
@@ -68,22 +91,10 @@ export const HomeScreen = ({navigation})=>{
     if(!fed){
       return(<Text>FEED NOW</Text>)
     }
-    else if (timer>=6 && timer<12){
-      return(<Text>Feed at 12!</Text>)
+    else {
+       return(<Text> next time {next.hours}</Text>)
     }
-    else if(timer>=12 && timer<18){
-      return(<Text>feed at 18</Text>)
-    }
-    else if(timer>=18 && timer<22 ){
-      return(<Text>feed at 22</Text>)
-    }
-    else{
-      return(<Text>Feed at 6 am!</Text>)
-    }
-  }
-
-  const foodTime1 = ()=>{
-
+     
   }
 
   useEffect(() => {
@@ -108,9 +119,16 @@ export const HomeScreen = ({navigation})=>{
 
     }, 1000);
     
-   checkTime(feeding)
+   
+   console.log("feeding check")
   }, [timer]);
-
+  
+  useEffect(() => {
+     console.log("a minute passed")
+     if(next!=0){
+      checkTime(feeding)
+     }
+  }, [minutes]);
 
 
 
@@ -124,7 +142,7 @@ export const HomeScreen = ({navigation})=>{
        <Text style={styles.Text}>Is cat fed? {fed?"yes":"no"}</Text>
        
        <Text style={styles.Text}>  {timer} : {minutes} : {seconds}  </Text>
-       <Text style={styles.Text}> Next food time for cat! : <FoodTime/> </Text>
+       <Text style={styles.Text}> <FoodTime/> </Text>
        <StatusBar style="auto"/>
       </View>
 
@@ -133,7 +151,7 @@ export const HomeScreen = ({navigation})=>{
       </View>
       <View style={styles.container3}>
         <Text>Current schedule</Text>
-        <Text>{feeding.map(a=><Text> {a.hours>=10?"":"0"}{a.hours}:{a.minutes>=10?"":"0"}{a.minutes} </Text>)}</Text></View>
+        <Text>{feeding.map(a=><Text key={a.hours + a.minutes}> {a.hours>=10?"":"0"}{a.hours}:{a.minutes>=10?"":"0"}{a.minutes} </Text>)}</Text></View>
       <TouchableHighlight 
       underlayColor="skyblue"
       style={styles.container4} onPress= {()=>{navigation.navigate("Settings")}}>

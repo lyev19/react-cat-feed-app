@@ -13,8 +13,9 @@ async function jumpStart() {
   console.log("this is it")
   console.log(a)
   //if asyncstorage doesnt exist
+  
   if (a === null) {
-
+    await AsyncStorage.setItem("last",JSON.stringify({"hours":6,"minutes":0})) 
     await AsyncStorage.setItem('token', 'my-token-value');
     const ob = { "times": [{ "hours": 6, "minutes": 0 }, { "hours": 12, "minutes": 0 }, { "hours": 18, "minutes": 0 }, { "hours": 22, "minutes": 0 }] }
     await AsyncStorage.setItem("times", JSON.stringify(ob))

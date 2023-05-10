@@ -1,9 +1,10 @@
-import { View,TextInput,Text,StyleSheet,TouchableOpacity,Modal} from "react-native"
-import { Button} from 'react-native'
+import { View,TextInput,Text,StyleSheet,TouchableOpacity,Modal,Button} from "react-native"
 import  AsyncStorage  from '@react-native-async-storage/async-storage'; 
-import { useEffect, useState } from "react";
+import { useEffect, useState,React } from "react";
 import { TimePickerModal } from 'react-native-paper-dates';
-import React from "react";
+import { createAlarm,deleteAlarm,getAlarms } from "react-native-simple-alarm";
+
+
 export const SettingsA = ({ navigation }) => {
 
 
@@ -11,6 +12,7 @@ export const SettingsA = ({ navigation }) => {
    const [modalVis, setModalVis] = useState(false)
    const [modalRemover,setModalRemover] = useState(false)
    const [selectedItem,setSelectedItem] = useState({"hours":0,"minutes":0})
+
 
    useEffect(() => {
       async function a() {
@@ -21,7 +23,9 @@ export const SettingsA = ({ navigation }) => {
       }
 
       a()
+      DateSetter(16,1)
       console.log("properly set")
+      
    }, []);
 
    useEffect(() => {
@@ -31,6 +35,7 @@ export const SettingsA = ({ navigation }) => {
      }
      b()
      console.log(times)
+    
    }, [times]);
 
 
@@ -68,19 +73,32 @@ export const SettingsA = ({ navigation }) => {
       return result
    }
 
+  const proper = (elem,list)=>{
 
+  }
  const onConfirmation = ({hours,minutes})=>{
     setModalVis(false);
     const b = {hours,minutes}
     if(checkTimes(b)){
       console.log("proper item")
-      setTimes( (times)=>[...times,{hours,minutes}])
-
+      const elem = minusToMayus([...times,{hours,minutes}])
+      setTimes( elem)
+      // createAlarm = async ()=>{
+      //     try {
+      //       await createAlarm({
+      //          active:true,
+      //          date: new Date().toISOString() ///
+      //       })
+      //     }
+      // }
+      
     }
     else{
       console.log("incorrect")
     }
  }
+
+
    const filtering = (a)=>{ 
       
        return a.hours===selectedItem.hours && a.minutes===selectedItem.minutes
@@ -90,12 +108,48 @@ export const SettingsA = ({ navigation }) => {
       
        console.log("!removed")
        const newTimes = times.filter(a=> !filtering(a) )
-       console.log(newTimes)
+    
        setTimes(newTimes)
        onPushModalRemover()
       
    }
-
+  //correct format for date creation and alarm setter ISO8601-compliant returns string
+   const DateSetter = (hours,minutes)=>{
+      const today = new Date()
+      //months start from 0 
+      const month = today.getMonth() + 1
+      const fullDate = today.getFullYear().toString() +"-"+month.toString()+"-"+today.getDay().toString()+"T"+(hours<10?"0"+hours:hours)+":"+(minutes<10?"0"+minutes:minutes)+":00" + ".000Z"
+      
+      return fullDate
+   }
+   
+   const getMinor = (Arr)=>{
+      let check=Arr[0]
+      for(let i = 1;i<Arr.length;i++){
+         if(Arr[i].hours<check.hours ){
+            check=Arr[i]
+         }
+         else if (Arr[i].hours===check.hours){
+            if(Arr[i].minutes<check.minutes){
+               check=Arr[i]
+            }
+         }
+         
+      }
+      return check
+   
+   }
+   const minusToMayus = (arr)=>{
+      let arrayA = arr
+      let arrayC = []
+      while(arrayC.length<arr.length){
+         let a = getMinor(arrayA)
+         arrayA = arrayA.filter(b => b!==a)
+         arrayC.push(a)
+      }
+      return arrayC
+   }
+   
    return (
       <View style={styles.containerA}>
           
